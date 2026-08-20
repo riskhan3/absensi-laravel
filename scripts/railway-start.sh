@@ -1,25 +1,16 @@
 #!/bin/bash
 
-echo "=== Railway Laravel Startup (Apache) ==="
+echo "=== Railway Laravel Startup ==="
 cd /var/www/html
 
-# Set PORT (Railway inject otomatis)
-PORT="${PORT:-80}"
-echo ">>> PORT=$PORT"
-
-# Update Apache port config
-sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
-sed -i "s/\*:80/\*:$PORT/g" /etc/apache2/sites-available/000-default.conf
-echo ">>> Apache dikonfigurasi pada port $PORT ✓"
-
 # Set permissions
-mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs bootstrap/cache
+mkdir -p storage/framework/sessions storage/framework/views \
+         storage/framework/cache/data storage/logs bootstrap/cache
 chmod -R 775 storage bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache
 
 # Buat .env dari environment variables Railway
 echo ">>> Membuat .env..."
-cat > /var/www/html/.env << EOF
+cat > /var/www/html/.env << ENVEOF
 APP_NAME="${APP_NAME:-Smart Absensi}"
 APP_ENV="${APP_ENV:-production}"
 APP_KEY="${APP_KEY}"
@@ -44,30 +35,31 @@ QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
 FILESYSTEM_DISK=local
 
 WHATSAPP_ENABLED=${WHATSAPP_ENABLED:-false}
-WHATSAPP_TOKEN=${WHATSAPP_TOKEN}
-
 SCHOOL_LATITUDE=${SCHOOL_LATITUDE:--0.8175879}
 SCHOOL_LONGITUDE=${SCHOOL_LONGITUDE:-100.6331262}
 GEOFENCE_RADIUS=${GEOFENCE_RADIUS:-500}
 GEOFENCING_ENABLED=${GEOFENCING_ENABLED:-true}
-EOF
-echo ">>> .env berhasil dibuat ✓"
+ENVEOF
+
+echo ">>> .env dibuat ✓"
+echo ">>> APP_KEY ada: $([ -n '$APP_KEY' ] && echo YES || echo NO)"
 
 # Clear cache
 php artisan config:clear 2>/dev/null || true
 
-# Migrasi database
+# Migrasi
 echo ">>> Running migrations..."
-php artisan migrate --force || echo ">>> WARNING: Migration gagal, lanjut..."
+php artisan migrate --force || echo ">>> Migration warning, continuing..."
 
 # Storage symlink
 php artisan storage:link 2>/dev/null || true
 
-# Cache untuk production
-echo ">>> Caching..."
+# Cache production
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
-echo ">>> Starting Apache on port $PORT..."
-exec apache2-foreground
+# Start server
+PORT="${PORT:-8080}"
+echo ">>> Starting on 0.0.0.0:$PORT"
+exec php artisan serve --host=0.0.0.0 --port=$PORT
