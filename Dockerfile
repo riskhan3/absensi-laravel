@@ -1,4 +1,7 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
+
+# Enable Apache modules
+RUN a2enmod rewrite headers
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,26 +15,28 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Set working directory
+WORKDIR /var/www/html
 
-# Copy dan install dependencies
+# Install PHP dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
+# Install Node dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy seluruh project
 COPY . .
 
-# Build assets
+# Build Vite assets
 RUN npm run build
 
-# Permissions
-RUN chmod -R 775 storage bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache
+# Copy Apache config
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Expose PORT (Railway set ini otomatis)
-EXPOSE 8080
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
 CMD ["bash", "scripts/railway-start.sh"]
