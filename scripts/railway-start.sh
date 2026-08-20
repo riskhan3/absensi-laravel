@@ -51,6 +51,10 @@ php artisan config:clear 2>/dev/null || true
 echo ">>> Running migrations..."
 php artisan migrate --force || echo ">>> Migration warning, continuing..."
 
+# Jalankan seeder
+echo ">>> Running seeder..."
+php artisan db:seed --force || echo ">>> Seeder warning, continuing..."
+
 # Storage symlink
 php artisan storage:link 2>/dev/null || true
 

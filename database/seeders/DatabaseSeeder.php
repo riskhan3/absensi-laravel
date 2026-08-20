@@ -43,17 +43,17 @@ class DatabaseSeeder extends Seeder
         }
 
         // ── 4. System Users (Admin, Superadmin, Scanner) ─────────────────────
-        User::firstOrCreate(['email' => 'superadmin@sekolah.com'], [
-            'name'     => 'Super Admin',
+        User::firstOrCreate(['email' => 'superadmin@sdn30selayo.sch.id'], [
+            'name'     => 'Super Admin SDN 30 Selayo',
             'password' => Hash::make('admin123'),
             'role'     => 'superadmin',
         ]);
-        User::firstOrCreate(['email' => 'admin@sekolah.com'], [
-            'name'     => 'Admin Sekolah',
+        User::firstOrCreate(['email' => 'admin@sdn30selayo.sch.id'], [
+            'name'     => 'Admin SDN 30 Selayo',
             'password' => Hash::make('admin123'),
             'role'     => 'admin',
         ]);
-        User::firstOrCreate(['email' => 'scanner@sekolah.com'], [
+        User::firstOrCreate(['email' => 'scanner@sdn30selayo.sch.id'], [
             'name'     => 'Petugas Scanner',
             'password' => Hash::make('scanner123'),
             'role'     => 'scanner',
@@ -378,9 +378,9 @@ class DatabaseSeeder extends Seeder
         echo "║  Staff TK   : 2 personel                            ║\n";
         echo "╠══════════════════════════════════════════════════════╣\n";
         echo "║  AKUN LOGIN:                                         ║\n";
-        echo "║  superadmin@sekolah.com          / admin123          ║\n";
-        echo "║  admin@sekolah.com               / admin123          ║\n";
-        echo "║  scanner@sekolah.com             / scanner123        ║\n";
+        echo "║  superadmin@sdn30selayo.sch.id    / admin123         ║\n";
+        echo "║  admin@sdn30selayo.sch.id         / admin123         ║\n";
+        echo "║  scanner@sdn30selayo.sch.id       / scanner123       ║\n";
         echo "║  albaria@sdn30selayo.sch.id       / guru123          ║\n";
         echo "║  dian.yurnades@sdn30selayo.sch.id / guru123          ║\n";
         echo "║  dona.handayani@sdn30selayo.sch.id/ tu123            ║\n";
