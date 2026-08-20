@@ -37,5 +37,8 @@ php artisan view:cache || true
 
 # Start server
 PORT="${PORT:-8000}"
+echo ">>> PORT=$PORT"
+echo ">>> APP_URL=$APP_URL"
+echo ">>> DB_HOST=$DB_HOST"
 echo ">>> Starting Laravel on 0.0.0.0:$PORT"
 exec php artisan serve --host=0.0.0.0 --port=$PORT
