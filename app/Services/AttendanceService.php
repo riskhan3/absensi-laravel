@@ -20,8 +20,9 @@ class AttendanceService
     {
         $this->geofencingService->validate($lat, $lon);
         [$person, $type] = $this->identify($scanCode);
-        $today = Carbon::today()->toDateString();
-        $now   = Carbon::now()->toTimeString();
+        $tz    = config('app.timezone', 'Asia/Jakarta');
+        $today = Carbon::today($tz)->toDateString();
+        $now   = Carbon::now($tz)->toTimeString();
         $record = $this->recordIn($person, $type, $today, $now, $lat, $lon, $subjectIds, $teacherId);
         $this->dispatchNotification($person, $type, $today, $now, 'masuk');
         return compact('person', 'type', 'record');
@@ -31,8 +32,9 @@ class AttendanceService
     {
         $this->geofencingService->validate($lat, $lon);
         [$person, $type] = $this->identify($scanCode);
-        $today = Carbon::today()->toDateString();
-        $now   = Carbon::now()->toTimeString();
+        $tz    = config('app.timezone', 'Asia/Jakarta');
+        $today = Carbon::today($tz)->toDateString();
+        $now   = Carbon::now($tz)->toTimeString();
         $record = $this->recordOut($person, $type, $today, $now);
         $this->dispatchNotification($person, $type, $today, $now, 'pulang');
         return compact('person', 'type', 'record');

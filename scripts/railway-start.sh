@@ -16,6 +16,7 @@ APP_ENV="${APP_ENV:-production}"
 APP_KEY="${APP_KEY}"
 APP_DEBUG="${APP_DEBUG:-false}"
 APP_URL="${APP_URL:-http://localhost}"
+APP_TIMEZONE="${APP_TIMEZONE:-Asia/Jakarta}"
 TRUSTED_PROXIES="${TRUSTED_PROXIES:-*}"
 
 LOG_CHANNEL=stack
